@@ -121,10 +121,10 @@ if (USE_BUILTIN_LCMTYPES)
   list(APPEND srcs builtinmessages.cpp)
 endif()
 
-add_executable(signal-scope ${srcs})
+add_executable(signal_scope ${srcs})
 
 #if (USE_BUILTIN_LCMTYPES)
-#  pods_use_pkg_config_packages(signal-scope lcmtypes_bot2-core)
+#  pods_use_pkg_config_packages(signal_scope lcmtypes_bot2-core)
 #endif()
 
 list(APPEND deps
@@ -135,7 +135,7 @@ list(APPEND deps
   ${catkin_LIBRARIES}
   )
 
-target_link_libraries(signal-scope ${deps})
+target_link_libraries(signal_scope ${deps})
 
 
 install(TARGETS ${TARGETS}
@@ -176,5 +176,5 @@ install(TARGETS ${TARGETS}
 #  DESTINATION signal_scope)
 
 
-#pods_install_executables(signal-scope)
+#pods_install_executables(signal_scope)
 
