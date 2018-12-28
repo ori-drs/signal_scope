@@ -1,4 +1,4 @@
-if("${USED_QTVERSION}" STREQUAL "5")
+#if("${USED_QTVERSION}" STREQUAL "5")
   find_package(Qt5 REQUIRED Core Gui Script Widgets)
   set(QT_LIBRARIES Qt5::Core Qt5::Gui Qt5::Script Qt5::Widgets)
   # Compatibility macros
@@ -16,11 +16,11 @@ if("${USED_QTVERSION}" STREQUAL "5")
   else()
     find_library(QWT_LIBRARY qwt-qt5)
   endif()
-else()
-  find_library(QWT_LIBRARY qwt)
-  find_package(Qt4 REQUIRED QtCore QtGui QtScript)
-  include(${QT_USE_FILE})
-endif()
+#else()
+#  find_library(QWT_LIBRARY qwt)
+#  find_package(Qt4 REQUIRED QtCore QtGui QtScript)
+#  include(${QT_USE_FILE})
+#endif()
 find_package(LCM REQUIRED)
 
 set(deps)
@@ -123,35 +123,58 @@ endif()
 
 add_executable(signal-scope ${srcs})
 
-if (USE_BUILTIN_LCMTYPES)
-  pods_use_pkg_config_packages(signal-scope lcmtypes_bot2-core)
-endif()
+#if (USE_BUILTIN_LCMTYPES)
+#  pods_use_pkg_config_packages(signal-scope lcmtypes_bot2-core)
+#endif()
 
 list(APPEND deps
   ${QT_LIBRARIES}
   ${QWT_LIBRARY}
   ${python_deps}
   ${LCM_LIBRARIES}
+  ${catkin_LIBRARIES}
   )
 
 target_link_libraries(signal-scope ${deps})
 
 
-pods_install_headers(
-  curvedata.h
-  lcmthread.h
-  mainwindow.h
-  plot.h
-  plotwidget.h
-  samplingthread.h
-  selectsignaldialog.h
-  setscaledialog.h
-  signaldata.h
-  signaldescription.h
-  signalhandler.h
-  ${python_moc_srcs}
-  DESTINATION signal_scope)
+install(TARGETS ${TARGETS}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 
-pods_install_executables(signal-scope)
+# Mark cpp header files for installation
+#install(DIRECTORY include/${PROJECT_NAME}/
+#  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+
+
+
+
+#install(TARGETS signal
+#        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+
+#install(FILES curvedata.h
+#        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+
+#pods_install_headers(
+#  curvedata.h
+#  lcmthread.h
+#  mainwindow.h
+#  plot.h
+#  plotwidget.h
+#  samplingthread.h
+#  selectsignaldialog.h
+#  setscaledialog.h
+#  signaldata.h
+#  signaldescription.h
+#  signalhandler.h
+#  ${python_moc_srcs}
+#  DESTINATION signal_scope)
+
+
+#pods_install_executables(signal-scope)
 
