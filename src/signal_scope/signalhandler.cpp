@@ -34,17 +34,19 @@ void SignalHandler::handleMessage(const lcm::ReceiveBuffer* rbuf, const std::str
   }
 }
 
-void SignalHandler::subscribe(lcm::LCM* lcmInstance)
+void SignalHandler::subscribe(ros::NodeHandle* lcmInstance)
 {
   if (mSubscription)
   {
     printf("error: SignalHandler::subscribe() called without first calling unsubscribe.\n");
     return;
   }
+  printf("SignalHandler: subscribe to everything here - disabled for ROS.\n");
+
 #if QT_VERSION >= 0x050000
-  mSubscription = lcmInstance->subscribe(this->channel().toLatin1().data(), &SignalHandler::handleMessage, this);
+//  mSubscription = lcmInstance->subscribe(this->channel().toLatin1().data(), &SignalHandler::handleMessage, this);
 #else
-  mSubscription = lcmInstance->subscribe(this->channel().toAscii().data(), &SignalHandler::handleMessage, this);
+//  mSubscription = lcmInstance->subscribe(this->channel().toAscii().data(), &SignalHandler::handleMessage, this);
 #endif
 }
 

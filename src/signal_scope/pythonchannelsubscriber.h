@@ -8,6 +8,9 @@
 #include <PythonQt.h>
 
 
+#include "std_msgs/String.h"
+
+
 class PythonChannelSubscriber : public LCMSubscriber
 {
   Q_OBJECT
@@ -25,17 +28,23 @@ public:
     return mChannel;
   }
 
-  void subscribe(lcm::LCM* lcmHandle)
+  void subscribe(ros::NodeHandle* lcmHandle)
   {
     if (mSubscription)
     {
       printf("error: subscribe() called without first calling unsubscribe.\n");
       return;
     }
+
+    printf("will subscribe now 0.\n");
 #if QT_VERSION >= 0x050000
-    mSubscription = lcmHandle->subscribe(this->channel().toLatin1().data(), &PythonChannelSubscriber::handleMessageOnChannel, this);
+    mSub =   lcmHandle->subscribe(this->channel().toLatin1().data(), 1000, &PythonChannelSubscriber::handleMessageOnChannel, this);
+    mSubscription = &mSub;
+    printf("will subscribe now 1.\n");
 #else
-    mSubscription = lcmHandle->subscribe(this->channel().toAscii().data(), &PythonChannelSubscriber::handleMessageOnChannel, this);
+    mSum =   lcmHandle->subscribe(this->channel().toAscii().data(), 1000, &PythonChannelSubscriber::handleMessageOnChannel, this);
+    mSubscription = &mSub;
+    printf("will subscribe now 2.\n");
 #endif
   }
 
@@ -63,8 +72,10 @@ public:
   }
 
 
-  void handleMessageOnChannel(const lcm::ReceiveBuffer* rbuf, const std::string& channel)
+  void handleMessageOnChannel(const std_msgs::String::ConstPtr& msg)//const lcm::ReceiveBuffer* rbuf, const std::string& channel)
   {
+    ROS_INFO("I heard: [%s]", msg->data.c_str());
+    /*
     QString channelStr = channel.c_str();
 
     if (!mHandlers.size())
@@ -83,12 +94,15 @@ public:
     {
       handler->onNewMessage(decodedMessage);
     }
+    */
   }
 
 
   QString mChannel;
   PythonQtObjectPtr mDecodeCallback;
   QList<PythonSignalHandler*> mHandlers;
+
+  ros::Subscriber mSub;
 };
 
 #endif

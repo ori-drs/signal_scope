@@ -14,6 +14,12 @@ namespace lcm {
   class Subscription;
 }
 
+namespace ros {
+  class NodeHandle;
+  class Subscriber;
+}
+
+
 class SignalData;
 class SignalDescription;
 
@@ -38,7 +44,7 @@ public:
 
   virtual bool extractSignalData(const lcm::ReceiveBuffer* rbuf, double& timeNow, double& signalValue) = 0;
 
-  virtual void subscribe(lcm::LCM* lcmInstance);
+  virtual void subscribe(ros::NodeHandle* lcmInstance);
 
  protected:
 

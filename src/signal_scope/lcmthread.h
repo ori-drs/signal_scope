@@ -6,6 +6,8 @@
 #include <QWaitCondition>
 #include <string>
 
+#include "std_msgs/String.h"
+
 class LCMSubscriber;
 
 namespace lcm
@@ -13,6 +15,11 @@ namespace lcm
   class LCM;
   class Subscription;
   class ReceiveBuffer;
+}
+
+namespace ros
+{
+  class NodeHandle;
 }
 
 class LCMThread : public QThread
@@ -35,7 +42,7 @@ public:
  protected:
 
 
-  void handleMessageOnChannel(const lcm::ReceiveBuffer* rbuf, const std::string& channel);
+  void handleMessageOnChannel(const std_msgs::String::ConstPtr& msg);//const lcm::ReceiveBuffer* rbuf, const std::string& channel);
 
 
   void run();
@@ -47,6 +54,8 @@ public:
   QList<LCMSubscriber*> mSubscribers;
 
   lcm::LCM* mLCM;
+
+  ros::NodeHandle* mNodeHandle;
 
   QMutex mMutex;
   QWaitCondition mWaitCondition;

@@ -4,11 +4,18 @@
 #include <QObject>
 
 #include <lcm/lcm-cpp.hpp>
+#include "ros/ros.h"
 
 namespace lcm
 {
   class LCM;
 }
+
+namespace ros
+{
+  class NodeHandle;
+}
+
 
 class LCMSubscriber : public QObject
 {
@@ -26,17 +33,19 @@ public:
 
   }
 
-  virtual void subscribe(lcm::LCM* lcmInstance) = 0;
+  virtual void subscribe(ros::NodeHandle* nodeInstance) = 0;
 
-  virtual void unsubscribe(lcm::LCM* lcmHandle)
+  virtual void unsubscribe(ros::NodeHandle* nodeInstance)
   {
-    lcmHandle->unsubscribe(mSubscription);
+    std::cout <<"REIMPLEMNT unsubscribe\n";
+    //lcmHandle->unsubscribe(mSubscription);
     mSubscription = 0;
   }
 
  protected:
 
-  lcm::Subscription* mSubscription;
+  //lcm::Subscription* mSubscription;
+  ros::Subscriber* mSubscription;
 };
 
 #endif

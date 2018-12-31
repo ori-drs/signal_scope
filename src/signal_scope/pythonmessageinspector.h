@@ -21,14 +21,17 @@ public:
     mDecodeCallback = decodeCallback;
   }
 
-  void subscribe(lcm::LCM* lcmHandle)
+  void subscribe(ros::NodeHandle* lcmHandle)
   {
     if (mSubscription)
     {
       printf("error: subscribe() called without first calling unsubscribe.\n");
       return;
     }
-    mSubscription = lcmHandle->subscribe(".*", &PythonMessageInspector::handleMessageOnChannel, this);
+
+    printf("PythonMessageInspector: subscribe to everything here - disabled for ROS.\n");
+
+    //mSubscription = lcmHandle->subscribe(".*", &PythonMessageInspector::handleMessageOnChannel, this);
   }
 
   QVariant decodeMessage(const lcm::ReceiveBuffer* rbuf)
