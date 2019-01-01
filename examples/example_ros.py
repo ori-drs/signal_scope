@@ -11,5 +11,16 @@ is used to record the attribute lookups that are required to
 extract the signal data from the lcm message in the future.
 '''
 
+
+import numpy
+
+def myFunction(msg):
+    '''velocity magnitude'''
+    x = [msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]
+    return msg.header.stamp, numpy.linalg.norm(x)
+
+addSignalFunction('/PoseStamped', myFunction)
+
+
 addSignal('/PoseStamped', msg.header.stamp, msg.pose.position.x)
 addSignal('/TwistStamped', msg.header.stamp, msg.twist.linear.x)
