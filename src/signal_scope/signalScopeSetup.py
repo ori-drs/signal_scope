@@ -143,7 +143,7 @@ def addSignalFunction(channel, signalFunction, plot=None, color=None, wrap=True,
     if wrap:
         def _signalFunction(x):
             t, v = signalFunction(x)
-            return t*1e-6, float(v)
+            return t.to_sec(), float(v)
     else:
         _signalFunction = signalFunction
 
