@@ -12,7 +12,6 @@ def loadMessageTypes(typesDict, typesName):
 
     originalSize = len(_messageTypes)
     for name, value in typesDict.iteritems():
-        print name
         if hasattr(value, '_get_packed_fingerprint'):
             _messageTypes[value._get_packed_fingerprint()] = value
 

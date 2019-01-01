@@ -21,29 +21,22 @@ LCMThread::~LCMThread()
 
 void LCMThread::initLCM()
 {
-  printf("initLCM() mfallon 1.\n");
   QMutexLocker locker(&mMutex);
-
-  printf("initLCM() mfallon 3x.\n");
 
   if (mNodeHandle)
   {
     return;
   }
 
-  printf("initLCM() mfallon 4x.\n");
-
   int argc = 0;
   char** argv = NULL;
-  ros::init(argc, argv, "scope");
-  printf("initLCM() mfallon .\n");
+  ros::init(argc, argv, "signal_scope", ros::init_options::AnonymousName);
   mNodeHandle = new ros::NodeHandle();
 
 }
 
 void LCMThread::addSubscriber(LCMSubscriber* subscriber)
 {
-  printf("addSubscriber mfallon.\n");
   this->initLCM();
   mSubscribers.append(subscriber);
   subscriber->subscribe(mNodeHandle);
@@ -58,7 +51,6 @@ void LCMThread::removeSubscriber(LCMSubscriber* subscriber)
 
 void LCMThread::run()
 {
-  printf("run mfallon.\n");
   this->initLCM();
 
   while (!mShouldStop)
@@ -69,18 +61,10 @@ void LCMThread::run()
       this->waitForResume();
     }
 
-    //int result = mLCM->handle();
-    std::cout << "number of subscribers:" << mSubscribers.size() << "\n";
-
+    std::cout << "Number of ROS subscribers: " << mSubscribers.size() << "\n";
     ros::spin();
-    std::cout << "finished spin\n";
-
-    /*
-    if (result != 0)
-    {
-      printf("mLCM->handle() returned non-zero.  Terminating LCM thread.\n");
-      break;
-    } */
+    printf("Terminating ROS thread.\n");
+    break;
   }
 }
 

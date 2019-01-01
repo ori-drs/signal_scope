@@ -4,10 +4,9 @@
 #include "lcmsubscriber.h"
 #include "lcmthread.h"
 #include "pythonsignalhandler.h"
+#include <topic_tools/shape_shifter.h>
 
 #include <PythonQt.h>
-
-#include <topic_tools/shape_shifter.h>
 
 
 class PythonChannelSubscriber : public LCMSubscriber
@@ -35,21 +34,17 @@ public:
       return;
     }
 
-    printf("will subscribe now 0.\n");
     std::string topic_name;
 #if QT_VERSION >= 0x050000
     topic_name = this->channel().toLatin1().data();
-    printf("will subscribe now 1.\n");
 #else
     topic_name = this->channel().toAscii().data();
-    printf("will subscribe now 2.\n");
 #endif
     boost::function<void(const topic_tools::ShapeShifter::ConstPtr&) > callback;
     callback = boost::bind( &PythonChannelSubscriber::handleMessageOnChannel, this, _1, topic_name ) ;
     mSub = lcmHandle->subscribe( topic_name, 1000, callback);
     mSubscription = &mSub;
   }
-
 
   void addSignalHandler(PythonSignalHandler* handler)
   {
@@ -68,6 +63,9 @@ public:
       return QVariant();
     }
 
+    // Once again, it would be nice to access directly the 
+    // private member ShapeShifter::msgBuf, unfortunately we can't.
+    // This oblige us to do a copy of the buffer using ShapeShifter::write
     static std::vector<uint8_t> buffer;
     buffer.resize( msg->size() );
     ros::serialization::OStream stream(buffer.data(), buffer.size());
@@ -87,8 +85,8 @@ public:
     {
       return;
     }
-    QVariant decodedMessage = this->decodeMessage(msg);
 
+    QVariant decodedMessage = this->decodeMessage(msg);
     if (!decodedMessage.isValid())
     {
       printf("failed to decode message on topic: %s\n", topic_name.c_str());
@@ -99,7 +97,6 @@ public:
     {
       handler->onNewMessage(decodedMessage);
     }
-
   }
 
 
@@ -107,7 +104,7 @@ public:
   PythonQtObjectPtr mDecodeCallback;
   QList<PythonSignalHandler*> mHandlers;
 
-  ros::Subscriber mSub;
+  ros::Subscriber mSub; // needed so at object is not destroyed
 };
 
 #endif

@@ -37,8 +37,7 @@ public:
 
   virtual void unsubscribe(ros::NodeHandle* nodeInstance)
   {
-    std::cout <<"REIMPLEMNT unsubscribe\n";
-    //lcmHandle->unsubscribe(mSubscription);
+    mSubscription->shutdown();
     mSubscription = 0;
   }
 
