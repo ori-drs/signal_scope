@@ -1,18 +1,12 @@
 #ifndef _SIGNALHANDLER_H_
 #define _SIGNALHANDLER_H_
 
-#include "lcmsubscriber.h"
+#include "rossubscriber.h"
 #include "signaldescription.h"
 
 #include <QHash>
 #include <string>
 
-
-namespace lcm {
-  class LCM;
-  class ReceiveBuffer;
-  class Subscription;
-}
 
 namespace ros {
   class NodeHandle;
@@ -24,7 +18,7 @@ class SignalData;
 class SignalDescription;
 
 
-class SignalHandler : public LCMSubscriber
+class SignalHandler : public ROSSubscriber
 {
   Q_OBJECT
 
@@ -42,13 +36,11 @@ public:
   QString channel() { return mDescription.mChannel; }
   SignalDescription* signalDescription() { return &mDescription; }
 
-  virtual bool extractSignalData(const lcm::ReceiveBuffer* rbuf, double& timeNow, double& signalValue) = 0;
-
-  virtual void subscribe(ros::NodeHandle* lcmInstance);
+  virtual void subscribe(ros::NodeHandle* rosInstance);
 
  protected:
 
-  void handleMessage(const lcm::ReceiveBuffer* rbuf, const std::string& channel);
+  void handleMessage();
 
   SignalData* mSignalData;
   SignalDescription mDescription;

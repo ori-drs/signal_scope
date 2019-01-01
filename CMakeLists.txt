@@ -24,14 +24,8 @@ include_directories(
 )
 
 find_package(PkgConfig)
-pkg_check_modules(DRCLCMTYPES drc-lcmtypes)
-set(use_builtin_lcmtypes_default OFF)
-if(DRCLCMTYPES_FOUND)
-  set(use_builtin_lcmtypes_default ON)
-endif()
 
 
-option(USE_BUILTIN_LCMTYPES "Compile builtin LCM types" ${use_builtin_lcmtypes_default})
 option(USE_PYTHON "Enable Python support." ON)
 
 add_subdirectory(src/signal_scope)

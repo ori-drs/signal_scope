@@ -1,15 +1,9 @@
-#ifndef _LCMSUBSCRIBER_h
-#define _LCMSUBSCRIBER_h
+#ifndef _ROSSUBSCRIBER_h
+#define _ROSSUBSCRIBER_h
 
 #include <QObject>
 
-#include <lcm/lcm-cpp.hpp>
 #include "ros/ros.h"
-
-namespace lcm
-{
-  class LCM;
-}
 
 namespace ros
 {
@@ -17,18 +11,18 @@ namespace ros
 }
 
 
-class LCMSubscriber : public QObject
+class ROSSubscriber : public QObject
 {
   Q_OBJECT
 
 public:
 
-  LCMSubscriber(QObject* parent=0) : QObject(parent)
+  ROSSubscriber(QObject* parent=0) : QObject(parent)
   {
     mSubscription = 0;
   }
 
-  virtual ~LCMSubscriber()
+  virtual ~ROSSubscriber()
   {
 
   }

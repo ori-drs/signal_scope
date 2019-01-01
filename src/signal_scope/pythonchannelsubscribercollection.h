@@ -1,7 +1,7 @@
 #ifndef _PYTHONCHANNELSUBSCRIBERCOLLECTION_H_
 #define _PYTHONCHANNELSUBSCRIBERCOLLECTION_H_
 
-#include "lcmthread.h"
+#include "rosthread.h"
 #include "pythonchannelsubscriber.h"
 #include "pythonsignalhandler.h"
 
@@ -15,9 +15,9 @@ class PythonChannelSubscriberCollection : public QObject
 
 public:
 
-  PythonChannelSubscriberCollection(LCMThread* lcmThread, PythonQtObjectPtr decodeCallback, QObject* parent=0) : QObject(parent)
+  PythonChannelSubscriberCollection(ROSThread* rosThread, PythonQtObjectPtr decodeCallback, QObject* parent=0) : QObject(parent)
   {
-    mLCMThread = lcmThread;
+    mROSThread = rosThread;
     mDecodeCallback = decodeCallback;
   }
 
@@ -30,7 +30,7 @@ public:
     }
     else
     {
-      mLCMThread->addSubscriber(handler);
+      mROSThread->addSubscriber(handler);
     }
   }
 
@@ -43,7 +43,7 @@ public:
     }
     else
     {
-      mLCMThread->removeSubscriber(handler);
+      mROSThread->removeSubscriber(handler);
     }
   }
 
@@ -55,7 +55,7 @@ public:
     {
       PythonChannelSubscriber* subscriber = new PythonChannelSubscriber(channel, mDecodeCallback, this);
       mChannelSubscribers[channel] = subscriber;
-      mLCMThread->addSubscriber(subscriber);
+      mROSThread->addSubscriber(subscriber);
     }
 
     PythonChannelSubscriber* subscriber = mChannelSubscribers[channel];
@@ -76,7 +76,7 @@ public:
 
  protected:
 
-  LCMThread* mLCMThread;
+  ROSThread* mROSThread;
   PythonQtObjectPtr mDecodeCallback;
   QMap<QString, PythonChannelSubscriber* > mChannelSubscribers;
 };

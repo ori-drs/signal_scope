@@ -5,11 +5,7 @@
 #include "signaldata.h"
 #include "selectsignaldialog.h"
 #include "signaldescription.h"
-#include "lcmthread.h"
-
-#if USE_BUILTIN_LCMTYPES
-  #include "builtinmessages.h"
-#endif
+#include "rosthread.h"
 
 #include <QLabel>
 #include <QLayout>
@@ -53,14 +49,9 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   mPlaying = false;
   this->setWindowTitle("Signal Scope");
 
-  mLCMThread = new LCMThread;
+  mROSThread = new ROSThread;
 
   this->initPython();
-
-#if USE_BUILTIN_LCMTYPES
-  BuiltinMessages::registerBuiltinHandlers(SignalHandlerFactory::instance());
-  BuiltinMessages::registerBuiltinChannels(SignalHandlerFactory::instance());
-#endif
 
   mScrollArea = new QScrollArea;
   mPlotArea = new QWidget;
@@ -135,7 +126,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
 
   this->onTogglePause();
 
-  mLCMThread->start();
+  mROSThread->start();
 }
 
 MainWindow::~MainWindow()
@@ -144,9 +135,9 @@ MainWindow::~MainWindow()
   QString settingsFile = QDir::homePath() + "/.signal_scope.json";
   this->saveSettings(settingsFile);
 
-  mLCMThread->stop();
-  mLCMThread->wait(250);
-  delete mLCMThread;
+  mROSThread->stop();
+  mROSThread->wait(250);
+  delete mROSThread;
 
   delete mInternal;
 }
@@ -183,11 +174,11 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* e)
   {
       if (e->type() == QEvent::Show)
       {
-        mLCMThread->pause();
+        mROSThread->pause();
       }
       else
       {
-        mLCMThread->resume();
+        mROSThread->resume();
       }
   }
 
@@ -236,9 +227,9 @@ void MainWindow::initPython()
   PythonQtObjectPtr mainContext = PythonQt::self()->getMainModule();
   PythonQtObjectPtr decodeCallback = PythonQt::self()->getVariable(mainContext, "decodeMessageFunction");
 
-  this->mSubscribers = new PythonChannelSubscriberCollection(mLCMThread, decodeCallback, this);
+  this->mSubscribers = new PythonChannelSubscriberCollection(mROSThread, decodeCallback, this);
   this->mMessageInspector = new PythonMessageInspector(decodeCallback);
-  //this->mLCMThread->addSubscriber(this->mMessageInspector);
+  //this->mROSThread->addSubscriber(this->mMessageInspector);
 }
 
 PythonSignalHandler* MainWindow::addPythonSignal(PlotWidget* plot, QVariant signalData)
@@ -276,11 +267,11 @@ void MainWindow::loadPythonScript(const QString& filename)
 {
   if (QFileInfo(filename).exists())
   {
-    this->mLCMThread->pause();
+    this->mROSThread->pause();
     this->mLastPythonScript = filename;
     this->onRemoveAllPlots();
     this->mPythonManager->executeFile(filename);
-    this->mLCMThread->resume();
+    this->mROSThread->resume();
   }
   else
   {

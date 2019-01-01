@@ -1,6 +1,6 @@
 #include <qapplication.h>
 #include "mainwindow.h"
-#include "lcmthread.h"
+#include "rosthread.h"
 
 #include "qjson.h"
 #include <QMap>

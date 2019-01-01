@@ -1,21 +1,21 @@
 #ifndef _PYTHONCHANNELSUBSCRIBER_H_
 #define _PYTHONCHANNELSUBSCRIBER_H_
 
-#include "lcmsubscriber.h"
-#include "lcmthread.h"
+#include "rossubscriber.h"
+#include "rosthread.h"
 #include "pythonsignalhandler.h"
 #include <topic_tools/shape_shifter.h>
 
 #include <PythonQt.h>
 
 
-class PythonChannelSubscriber : public LCMSubscriber
+class PythonChannelSubscriber : public ROSSubscriber
 {
   Q_OBJECT
 
 public:
 
-  PythonChannelSubscriber(QString channel, PythonQtObjectPtr decodeCallback, QObject* parent=0) : LCMSubscriber(parent)
+  PythonChannelSubscriber(QString channel, PythonQtObjectPtr decodeCallback, QObject* parent=0) : ROSSubscriber(parent)
   {
     mChannel = channel;
     mDecodeCallback = decodeCallback;
@@ -26,7 +26,7 @@ public:
     return mChannel;
   }
 
-  void subscribe(ros::NodeHandle* lcmHandle)
+  void subscribe(ros::NodeHandle* rosHandle)
   {
     if (mSubscription)
     {
@@ -42,7 +42,7 @@ public:
 #endif
     boost::function<void(const topic_tools::ShapeShifter::ConstPtr&) > callback;
     callback = boost::bind( &PythonChannelSubscriber::handleMessageOnChannel, this, _1, topic_name ) ;
-    mSub = lcmHandle->subscribe( topic_name, 1000, callback);
+    mSub = rosHandle->subscribe( topic_name, 1000, callback);
     mSubscription = &mSub;
   }
 

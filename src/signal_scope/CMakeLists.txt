@@ -21,27 +21,12 @@
 #  find_package(Qt4 REQUIRED QtCore QtGui QtScript)
 #  include(${QT_USE_FILE})
 #endif()
-find_package(LCM REQUIRED)
 
 set(deps)
-
-if(USE_BUILTIN_LCMTYPES)
-
-  if(NOT DRCLCMTYPES_FOUND)
-    message(SEND_ERROR "USE_BUILTIN_LCMTYPES is enabled but drc lcmtypes is not found.")
-  endif()
-
-  link_directories(${DRCLCMTYPES_LIBRARY_DIRS})
-  include_directories(${DRCLCMTYPES_INCLUDE_DIRS})
-  list(APPEND deps ${DRCLCMTYPES_LIBRARIES})
-  add_definitions(-DUSE_BUILTIN_LCMTYPES)
-endif()
-
 
 find_path(QWT_INCLUDE_DIR qwt/qwt.h HINTS /usr/local/lib)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${QWT_INCLUDE_DIR})
-include_directories(${LCM_INCLUDE_DIRS})
 
 if(USE_PYTHON)
 
@@ -80,8 +65,8 @@ qt4_wrap_cpp(moc_srcs
   mainwindow.h
   plot.h
   plotwidget.h
-  lcmthread.h
-  lcmsubscriber.h
+  rosthread.h
+  rossubscriber.h
   signalhandler.h
   setscaledialog.h
   selectsignaldialog.h
@@ -111,15 +96,11 @@ set(srcs
   setscaledialog.cpp
   signaldata.cpp
   signaldescription.cpp
-  lcmthread.cpp
+  rosthread.cpp
   signalhandler.cpp
   selectsignaldialog.cpp
   ${python_srcs}
   )
-
-if (USE_BUILTIN_LCMTYPES)
-  list(APPEND srcs builtinmessages.cpp)
-endif()
 
 add_executable(signal_scope ${srcs})
 
@@ -127,7 +108,6 @@ list(APPEND deps
   ${QT_LIBRARIES}
   ${QWT_LIBRARY}
   ${python_deps}
-  ${LCM_LIBRARIES}
   ${catkin_LIBRARIES}
   )
 

@@ -1,25 +1,22 @@
-#include "lcmthread.h"
-#include "lcmsubscriber.h"
+#include "rosthread.h"
+#include "rossubscriber.h"
 
 #include <QMutexLocker>
-#include <lcm/lcm-cpp.hpp>
-
 #include "ros/ros.h"
 
 
-LCMThread::LCMThread()
+ROSThread::ROSThread()
 {
   mShouldStop = false;
   mShouldPause = false;
-  mLCM = 0;
   mNodeHandle = 0;
 }
 
-LCMThread::~LCMThread()
+ROSThread::~ROSThread()
 {
 }
 
-void LCMThread::initLCM()
+void ROSThread::initROS()
 {
   QMutexLocker locker(&mMutex);
 
@@ -35,23 +32,23 @@ void LCMThread::initLCM()
 
 }
 
-void LCMThread::addSubscriber(LCMSubscriber* subscriber)
+void ROSThread::addSubscriber(ROSSubscriber* subscriber)
 {
-  this->initLCM();
+  this->initROS();
   mSubscribers.append(subscriber);
   subscriber->subscribe(mNodeHandle);
 }
 
-void LCMThread::removeSubscriber(LCMSubscriber* subscriber)
+void ROSThread::removeSubscriber(ROSSubscriber* subscriber)
 {
-  this->initLCM();
+  this->initROS();
   subscriber->unsubscribe(mNodeHandle);
   mSubscribers.removeAll(subscriber);
 }
 
-void LCMThread::run()
+void ROSThread::run()
 {
-  this->initLCM();
+  this->initROS();
 
   while (!mShouldStop)
   {
@@ -68,13 +65,13 @@ void LCMThread::run()
   }
 }
 
-void LCMThread::stop()
+void ROSThread::stop()
 {
   mShouldStop = true;
   this->resume();
 }
 
-void LCMThread::pause()
+void ROSThread::pause()
 {
   mMutex.lock();
   mShouldPause = true;
@@ -82,14 +79,14 @@ void LCMThread::pause()
   mMutex.unlock();
 }
 
-void LCMThread::waitForResume()
+void ROSThread::waitForResume()
 {
   mMutex.lock();
   mWaitCondition.wait(&mMutex);
   mMutex.unlock();
 }
 
-void LCMThread::resume()
+void ROSThread::resume()
 {
   mShouldPause = false;
   mWaitCondition.wakeAll();

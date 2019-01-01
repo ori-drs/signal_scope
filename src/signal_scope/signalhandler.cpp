@@ -3,10 +3,8 @@
 #include "signaldata.h"
 #include "signaldescription.h"
 
-#include <lcm/lcm-cpp.hpp>
 
-
-SignalHandler::SignalHandler(const SignalDescription* signalDescription, QObject* parent) : LCMSubscriber(parent)
+SignalHandler::SignalHandler(const SignalDescription* signalDescription, QObject* parent) : ROSSubscriber(parent)
 {
   mDescription = *signalDescription;
   mSignalData = new SignalData();
@@ -17,37 +15,12 @@ SignalHandler::~SignalHandler()
   delete mSignalData;
 }
 
-void SignalHandler::handleMessage(const lcm::ReceiveBuffer* rbuf, const std::string& channel)
+void SignalHandler::handleMessage()
 {
-  double timeNow;
-  double signalValue;
-  (void)channel;
-
-  bool valid = this->extractSignalData(rbuf, timeNow, signalValue);
-  if (valid)
-  {
-    mSignalData->appendSample(timeNow, signalValue);
-  }
-  else
-  {
-    mSignalData->flagMessageError();
-  }
 }
 
-void SignalHandler::subscribe(ros::NodeHandle* lcmInstance)
+void SignalHandler::subscribe(ros::NodeHandle* rosInstance)
 {
-  if (mSubscription)
-  {
-    printf("error: SignalHandler::subscribe() called without first calling unsubscribe.\n");
-    return;
-  }
-  printf("SignalHandler: subscribe to everything here - disabled for ROS.\n");
-
-#if QT_VERSION >= 0x050000
-//  mSubscription = lcmInstance->subscribe(this->channel().toLatin1().data(), &SignalHandler::handleMessage, this);
-#else
-//  mSubscription = lcmInstance->subscribe(this->channel().toAscii().data(), &SignalHandler::handleMessage, this);
-#endif
 }
 
 SignalHandlerFactory& SignalHandlerFactory::instance()

@@ -65,11 +65,6 @@ public:
     return true;
   }
 
-  virtual bool extractSignalData(const lcm::ReceiveBuffer* rbuf, double& timeNow, double& signalValue)
-  {
-    return false;
-  }
-
  protected:
 
   PythonQtObjectPtr mCallback;

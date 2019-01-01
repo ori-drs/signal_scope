@@ -6,67 +6,6 @@ import traceback
 from PythonQt import QtGui
 
 
-_messageTypes = {}
-
-def loadMessageTypes(typesDict, typesName):
-
-    originalSize = len(_messageTypes)
-    for name, value in typesDict.iteritems():
-        if hasattr(value, '_get_packed_fingerprint'):
-            _messageTypes[value._get_packed_fingerprint()] = value
-
-    print 'Loaded %d lcm message types from: %s' % (len(_messageTypes) - originalSize, typesName)
-
-
-def findLCMModules(searchDir):
-
-    initFiles = glob.glob(os.path.join(searchDir, '*/__init__.py'))
-    for initFile in initFiles:
-        if open(initFile, 'r').readline() == '"""LCM package __init__.py file\n':
-            moduleDir = os.path.dirname(initFile)
-            moduleName = os.path.basename(moduleDir)
-            sys.path.insert(0, os.path.dirname(moduleDir))
-            try:
-                module = __import__(moduleName)
-            except ImportError:
-                print traceback.format_exc()
-
-            sys.path.pop(0)
-            loadMessageTypes(module.__dict__, module.__name__)
-
-
-def findLCMTypes(searchDir):
-    files = glob.glob(os.path.join(searchDir, '*.py'))
-    for filename in files:
-        if open(filename, 'r').readline() == '"""LCM type definitions\n':
-            scope = {}
-            try:
-                execfile(filename, scope)
-            except:
-                pass
-            loadMessageTypes(scope, os.path.basename(filename))
-
-
-def findLCMModulesInSysPath():
-    try:
-        for searchDir in sys.path:
-            findLCMModules(searchDir)
-    except:
-        print traceback.format_exc()
-
-findLCMModulesInSysPath()
-
-
-def getMessageTypeNames():
-    return sorted([cls.__name__ for cls in _messageTypes.values()])
-
-
-def getMessageType(typeName):
-    for cls in _messageTypes.values():
-        if cls.__name__ == typeName:
-            return cls
-
-
 class LocalTimeHelper(object):
 
   def _getResolverFunction(self):

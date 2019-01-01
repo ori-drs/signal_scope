@@ -1,41 +1,34 @@
-#ifndef _LCMTHREAD_H_
-#define _LCMTHREAD_H_
+#ifndef _ROSTHREAD_H_
+#define _ROSTHREAD_H_
 
 #include <QThread>
 #include <QMutex>
 #include <QWaitCondition>
 #include <string>
 
-class LCMSubscriber;
-
-namespace lcm
-{
-  class LCM;
-  class Subscription;
-  class ReceiveBuffer;
-}
+class ROSSubscriber;
 
 namespace ros
 {
   class NodeHandle;
 }
 
-class LCMThread : public QThread
+class ROSThread : public QThread
  {
   Q_OBJECT
 
 public:
 
-  LCMThread();
+  ROSThread();
 
-  ~LCMThread();
+  ~ROSThread();
 
   void stop();
   void pause();
   void resume();
 
-  void addSubscriber(LCMSubscriber* subscriber);
-  void removeSubscriber(LCMSubscriber* subscriber);
+  void addSubscriber(ROSSubscriber* subscriber);
+  void removeSubscriber(ROSSubscriber* subscriber);
 
  protected:
 
@@ -44,14 +37,13 @@ public:
 
 
   void run();
-  void initLCM();
+  void initROS();
   void waitForResume();
 
   bool mShouldPause;
   bool mShouldStop;
-  QList<LCMSubscriber*> mSubscribers;
+  QList<ROSSubscriber*> mSubscribers;
 
-  lcm::LCM* mLCM;
   ros::NodeHandle* mNodeHandle;
 
   QMutex mMutex;

@@ -9,7 +9,7 @@ class QScrollArea;
 class QVBoxLayout;
 class QTimer;
 class PlotWidget;
-class LCMThread;
+class ROSThread;
 class PythonChannelSubscriberCollection;
 class SignalHandler;
 class PythonSignalHandler;
@@ -93,7 +93,7 @@ protected:
 
   QList<PlotWidget*> mPlots;
 
-  LCMThread* mLCMThread;
+  ROSThread* mROSThread;
 
   ctkPythonConsole* mConsole;
   ctkAbstractPythonManager* mPythonManager;
