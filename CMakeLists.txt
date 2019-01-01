@@ -8,7 +8,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp bot_core_lcmtypes drc_lcmtypes
+  roscpp
   python_qt
   topic_tools
 )
@@ -16,7 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS
 #    include
-  CATKIN_DEPENDS roscpp bot_core_lcmtypes drc_lcmtypes
+  CATKIN_DEPENDS roscpp
 )
 
 include_directories(

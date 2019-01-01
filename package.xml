@@ -10,8 +10,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
-  <depend>bot_core_lcmtypes</depend>
-  <depend>drc_lcmtypes</depend>
   <depend>python_qt</depend>
   <depend>topic_tools</depend>
 
