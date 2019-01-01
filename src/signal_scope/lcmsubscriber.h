@@ -43,7 +43,6 @@ public:
 
  protected:
 
-  //lcm::Subscription* mSubscription;
   ros::Subscriber* mSubscription;
 };
 

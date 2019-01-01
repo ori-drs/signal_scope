@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 
 project(signal_scope)
-add_compile_options(-std=c++11)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 #list(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")

@@ -123,10 +123,6 @@ endif()
 
 add_executable(signal_scope ${srcs})
 
-#if (USE_BUILTIN_LCMTYPES)
-#  pods_use_pkg_config_packages(signal_scope lcmtypes_bot2-core)
-#endif()
-
 list(APPEND deps
   ${QT_LIBRARIES}
   ${QWT_LIBRARY}
@@ -143,38 +139,3 @@ install(TARGETS ${TARGETS}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-
-
-# Mark cpp header files for installation
-#install(DIRECTORY include/${PROJECT_NAME}/
-#  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
-
-
-
-
-#install(TARGETS signal
-#        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
-
-#install(FILES curvedata.h
-#        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
-
-#pods_install_headers(
-#  curvedata.h
-#  lcmthread.h
-#  mainwindow.h
-#  plot.h
-#  plotwidget.h
-#  samplingthread.h
-#  selectsignaldialog.h
-#  setscaledialog.h
-#  signaldata.h
-#  signaldescription.h
-#  signalhandler.h
-#  ${python_moc_srcs}
-#  DESTINATION signal_scope)
-
-
-#pods_install_executables(signal_scope)
-
