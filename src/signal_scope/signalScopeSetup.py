@@ -12,6 +12,7 @@ def loadMessageTypes(typesDict, typesName):
 
     originalSize = len(_messageTypes)
     for name, value in typesDict.iteritems():
+        print name
         if hasattr(value, '_get_packed_fingerprint'):
             _messageTypes[value._get_packed_fingerprint()] = value
 
@@ -132,16 +133,24 @@ def createSignalFunction(timeLookup, valueLookup):
     v = valueLookup._getResolverFunction()
 
     def func(msg):
-        return t(msg)*1e-6, v(msg)
+        return t(msg).to_sec(), v(msg)
     func.__doc__ = v.__doc__
     return func
 
 
 
-def decodeMessageFunction(messageBytes):
+def decodeMessageFunction(messageBytes, messageType):
     s = str(messageBytes)
-    message = _messageTypes[s[:8]].decode(s)
-    return message
+    # Use messageType string to import ros message type
+    # TODO: 
+    # - find out if is this efficient - e.g. at 500Hz
+    # - cache the imported messages and skip importing those that have been
+    # - remove the LCM does for decoding
+    messagePackage,messageType= str.split(str(messageType),'/')
+    exec('from ' + messagePackage + '.msg import ' + messageType )
+    exec('p = ' + messageType + '()')
+    p.deserialize(s)
+    return p
 
 
 msg = LookupHelper()

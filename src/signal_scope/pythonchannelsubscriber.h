@@ -7,8 +7,7 @@
 
 #include <PythonQt.h>
 
-
-#include "std_msgs/String.h"
+#include <topic_tools/shape_shifter.h>
 
 
 class PythonChannelSubscriber : public LCMSubscriber
@@ -37,15 +36,18 @@ public:
     }
 
     printf("will subscribe now 0.\n");
+    std::string topic_name;
 #if QT_VERSION >= 0x050000
-    mSub =   lcmHandle->subscribe(this->channel().toLatin1().data(), 1000, &PythonChannelSubscriber::handleMessageOnChannel, this);
-    mSubscription = &mSub;
+    topic_name = this->channel().toLatin1().data();
     printf("will subscribe now 1.\n");
 #else
-    mSum =   lcmHandle->subscribe(this->channel().toAscii().data(), 1000, &PythonChannelSubscriber::handleMessageOnChannel, this);
-    mSubscription = &mSub;
+    topic_name = this->channel().toAscii().data();
     printf("will subscribe now 2.\n");
 #endif
+    boost::function<void(const topic_tools::ShapeShifter::ConstPtr&) > callback;
+    callback = boost::bind( &PythonChannelSubscriber::handleMessageOnChannel, this, _1, topic_name ) ;
+    mSub = lcmHandle->subscribe( topic_name, 1000, callback);
+    mSubscription = &mSub;
   }
 
 
@@ -59,34 +61,37 @@ public:
     mHandlers.removeAll(handler);
   }
 
-  QVariant decodeMessage(const lcm::ReceiveBuffer* rbuf)
+  QVariant decodeMessage(const topic_tools::ShapeShifter::ConstPtr& msg)
   {
     if (!mDecodeCallback)
     {
       return QVariant();
     }
 
+    static std::vector<uint8_t> buffer;
+    buffer.resize( msg->size() );
+    ros::serialization::OStream stream(buffer.data(), buffer.size());
+    msg->write(stream);
+
     QVariantList args;
-    args << QByteArray((char*)rbuf->data, rbuf->data_size);
+    args << QByteArray((char*)buffer.data(), buffer.size());
+    args << QString(msg->getDataType().c_str());
     return PythonQt::self()->call(mDecodeCallback, args);
   }
 
 
-  void handleMessageOnChannel(const std_msgs::String::ConstPtr& msg)//const lcm::ReceiveBuffer* rbuf, const std::string& channel)
+  void handleMessageOnChannel(const topic_tools::ShapeShifter::ConstPtr& msg,
+                              const std::string &topic_name )
   {
-    ROS_INFO("I heard: [%s]", msg->data.c_str());
-    /*
-    QString channelStr = channel.c_str();
-
     if (!mHandlers.size())
     {
       return;
     }
+    QVariant decodedMessage = this->decodeMessage(msg);
 
-    QVariant decodedMessage = this->decodeMessage(rbuf);
     if (!decodedMessage.isValid())
     {
-      printf("failed to decode message on channel: %s\n", channel.c_str());
+      printf("failed to decode message on topic: %s\n", topic_name.c_str());
       return;
     }
 
@@ -94,7 +99,7 @@ public:
     {
       handler->onNewMessage(decodedMessage);
     }
-    */
+
   }
 
 
