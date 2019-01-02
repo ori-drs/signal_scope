@@ -9,11 +9,12 @@ def talker():
     pub1 = rospy.Publisher('/PoseStamped', PoseStamped, queue_size=10)
     pub2 = rospy.Publisher('/TwistStamped', TwistStamped, queue_size=10)
     rospy.init_node('talker', anonymous=True)
-    rate = rospy.Rate(100) # 10hz
+    rate = rospy.Rate(100) # 100hz
     i = 0.0
     while not rospy.is_shutdown():
         message = "running: %s" % rospy.get_time()
-        rospy.loginfo(message)
+        message = message + " " + str(int(i))
+        rospy.loginfo_throttle(1, message)
 
         p = PoseStamped()
         p.pose.position.x = numpy.sin(i/10);
