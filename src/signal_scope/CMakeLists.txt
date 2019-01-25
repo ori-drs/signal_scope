@@ -44,8 +44,8 @@ if(USE_PYTHON)
   endif()
 
   find_package(PythonLibs 2.7 REQUIRED)
-  find_package(PythonQt REQUIRED)
-  find_package(CTKPythonConsole REQUIRED)
+  #find_package(PythonQt REQUIRED)
+  #find_package(CTKPythonConsole REQUIRED)
 
   include_directories(${PYTHON_INCLUDE_DIRS})
   include_directories(${PYTHONQT_INCLUDE_DIRS})

@@ -9,6 +9,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   python_qt
+  ctk_python_console
   topic_tools
 )
 

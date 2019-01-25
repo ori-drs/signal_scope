@@ -11,6 +11,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
   <depend>python_qt</depend>
+  <depend>ctk_python_console</depend>
   <depend>topic_tools</depend>
 
   <export>
