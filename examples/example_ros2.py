@@ -27,11 +27,11 @@ def positionNorm(msg):
     x = [msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.position.z]
     return msg.header.stamp, numpy.linalg.norm(x)
 
-addSignal('/state_estimator/quadruped_state', msg.header.stamp, msg.pose.pose.position.x)
-addSignal('/state_estimator/quadruped_state', msg.header.stamp, msg.pose.pose.position.y)
-addSignal('/state_estimator/quadruped_state', msg.header.stamp, msg.pose.pose.position.z)
-addSignalFunction('/state_estimator/quadruped_state', positionNorm)
+addSignal('/state_estimator/anymal_state', msg.header.stamp, msg.pose.pose.position.x)
+addSignal('/state_estimator/anymal_state', msg.header.stamp, msg.pose.pose.position.y)
+addSignal('/state_estimator/anymal_state', msg.header.stamp, msg.pose.pose.position.z)
+addSignalFunction('/state_estimator/anymal_state', positionNorm)
 
 addPlot()
 
-addSignalFunction('/state_estimator/quadruped_state', getYawDegrees)
+addSignalFunction('/state_estimator/anymal_state', getYawDegrees)
