@@ -22,16 +22,28 @@ def getYawDegrees(msg):
     euler = tf.transformations.euler_from_quaternion(quaternion)
     return msg.header.stamp, euler[2]*180.0/numpy.pi
 
-def positionNorm(msg):
+def getPositionNorm(msg):
     '''position magnitude'''
     x = [msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.position.z]
     return msg.header.stamp, numpy.linalg.norm(x)
 
+def getVelocity(msg):
+    '''velocity in m/sec'''
+    vel = [msg.twist.twist.linear.x, msg.twist.twist.linear.y, msg.twist.twist.linear.z]
+    return msg.header.stamp, numpy.linalg.norm(vel)
+
+addPlot(timeWindow=20, yLimits=[-10, 10])
 addSignal('/state_estimator/anymal_state', msg.header.stamp, msg.pose.pose.position.x)
 addSignal('/state_estimator/anymal_state', msg.header.stamp, msg.pose.pose.position.y)
 addSignal('/state_estimator/anymal_state', msg.header.stamp, msg.pose.pose.position.z)
-addSignalFunction('/state_estimator/anymal_state', positionNorm)
+addSignalFunction('/state_estimator/anymal_state', getPositionNorm)
 
-addPlot()
-
+addPlot(timeWindow=20, yLimits=[-180, 180])
 addSignalFunction('/state_estimator/anymal_state', getYawDegrees)
+
+
+addPlot(timeWindow=20, yLimits=[-2, 2])
+addSignalFunction('/state_estimator/anymal_state', getVelocity)
+
+
+
