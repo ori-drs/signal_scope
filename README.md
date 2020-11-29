@@ -12,6 +12,9 @@ signal-scope is a live plotting tool for ROS messages.
 
 ## Build Instructions
 
+* git clone git@github.com:ori-drs/PythonQt.git python_qt
+* git clone git@github.com:ori-drs/ctkPythonConsole.git ctk_python_console
+* git clone git@github.com:ori-drs/signal_scope.git signal_scope
 * catkin build signal_scope
 
 
@@ -23,5 +26,5 @@ A configuration is specified in an simple python script. See the 'examples' dire
 * rosrun signal_scope signal_scope example_anymal.py
 
 
-![An old rock in the desert](signal-scope.jpg)
+![Signal Scope with 400Hz date from the ANYmal robot](signal-scope.png)
 
