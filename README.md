@@ -26,7 +26,7 @@ catkin build signal_scope
 A configuration is specified in an simple python script. 
 
 * roscd signal_scope/examples
-* rosrun signal_scope signal_scope example_anymal.py
+* rosrun signal_scope signal_scope example_ros_anymal.py
 
 This example has conversions to euler angles, velocity and plot configuration
 
