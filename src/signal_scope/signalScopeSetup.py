@@ -78,7 +78,7 @@ def createSignalFunction(timeLookup, valueLookup):
 
 
 def decodeMessageFunction(messageBytes, messageType):
-    s = str(messageBytes)
+    s = messageBytes.data()
     # Use messageType string to import ros message type
     # TODO: 
     # - find out if is this efficient - e.g. at 500Hz
@@ -87,8 +87,8 @@ def decodeMessageFunction(messageBytes, messageType):
     messagePackage,messageType= str.split(str(messageType),'/')
     exec('from ' + messagePackage + '.msg import ' + messageType )
     exec('p = ' + messageType + '()')
-    p.deserialize(s)
-    return p
+    pp = eval('p.deserialize(s)')
+    return pp
 
 
 msg = LookupHelper()
