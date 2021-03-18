@@ -78,16 +78,18 @@ def createSignalFunction(timeLookup, valueLookup):
 
 
 def decodeMessageFunction(messageBytes, messageType):
-    s = str(messageBytes)
+    s = messageBytes.data()
     # Use messageType string to import ros message type
     # TODO: 
     # - find out if is this efficient - e.g. at 500Hz
     # - cache the imported messages and skip importing those that have been
     # - remove the LCM does for decoding
     messagePackage,messageType= str.split(str(messageType),'/')
-    exec('from ' + messagePackage + '.msg import ' + messageType )
-    exec('p = ' + messageType + '()')
-    p.deserialize(s)
+    ldict = locals()
+    exec('from ' + messagePackage + '.msg import ' + messageType, ldict)
+    exec('p = ' + messageType + '()', ldict)
+    exec("p.deserialize(s)", ldict)
+    p = ldict['p']
     return p
 
 
