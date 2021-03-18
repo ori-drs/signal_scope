@@ -85,10 +85,12 @@ def decodeMessageFunction(messageBytes, messageType):
     # - cache the imported messages and skip importing those that have been
     # - remove the LCM does for decoding
     messagePackage,messageType= str.split(str(messageType),'/')
-    exec('from ' + messagePackage + '.msg import ' + messageType )
-    exec('p = ' + messageType + '()')
-    pp = eval('p.deserialize(s)')
-    return pp
+    ldict = locals()
+    exec('from ' + messagePackage + '.msg import ' + messageType, ldict)
+    exec('p = ' + messageType + '()', ldict)
+    exec("p.deserialize(s)", ldict)
+    p = ldict['p']
+    return p
 
 
 msg = LookupHelper()
